@@ -1,0 +1,15 @@
+# Generated application bundles and release archives
+TinyCompressor/build/
+TinyCompressor/dist/
+
+# macOS and Xcode metadata
+.DS_Store
+**/.DS_Store
+*.xcuserstate
+xcuserdata/
+
+# Generated icon intermediates; AppIcon.icns is the tracked bundle asset.
+TinyCompressor/Resources/AppIcon.iconset/
+
+# Optional in-place compression backups
+*.bak
