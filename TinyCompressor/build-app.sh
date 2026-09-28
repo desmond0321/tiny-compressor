@@ -21,8 +21,8 @@ trap cleanup EXIT HUP INT TERM
 rm -rf "$APP_DIR"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR" "$TOOLS_DIR" "$FRAMEWORKS_DIR" "$DIST_DIR"
 
-arch -x86_64 /usr/bin/swiftc -target x86_64-apple-macos14.0 -parse-as-library -framework SwiftUI -framework AppKit -framework UniformTypeIdentifiers "$SCRIPT_DIR/Sources/TinyCompressorApp.swift" -o "$WORK_DIR/TinyCompressor-x86_64"
-arch -arm64 /usr/bin/swiftc -target arm64-apple-macos14.0 -parse-as-library -framework SwiftUI -framework AppKit -framework UniformTypeIdentifiers "$SCRIPT_DIR/Sources/TinyCompressorApp.swift" -o "$WORK_DIR/TinyCompressor-arm64"
+/usr/bin/swiftc -target x86_64-apple-macos14.0 -parse-as-library -framework SwiftUI -framework AppKit -framework UniformTypeIdentifiers "$SCRIPT_DIR/Sources/TinyCompressorApp.swift" -o "$WORK_DIR/TinyCompressor-x86_64"
+/usr/bin/swiftc -target arm64-apple-macos14.0 -parse-as-library -framework SwiftUI -framework AppKit -framework UniformTypeIdentifiers "$SCRIPT_DIR/Sources/TinyCompressorApp.swift" -o "$WORK_DIR/TinyCompressor-arm64"
 lipo -create "$WORK_DIR/TinyCompressor-x86_64" "$WORK_DIR/TinyCompressor-arm64" -output "$MACOS_DIR/TinyCompressor"
 cp "$SCRIPT_DIR/Resources/Info.plist" "$APP_DIR/Contents/Info.plist"
 cp "$SCRIPT_DIR/Resources/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
@@ -60,7 +60,19 @@ rewrite_dependencies() {
     "$X86_BREW_PREFIX/opt/libpng/lib/libpng16.16.dylib" \
     "$ARM_BREW_PREFIX/opt/libpng/lib/libpng16.16.dylib" \
     "$X86_BREW_PREFIX/opt/jpeg-turbo/lib/libjpeg.8.dylib" \
-    "$ARM_BREW_PREFIX/opt/jpeg-turbo/lib/libjpeg.8.dylib"; do
+    "$ARM_BREW_PREFIX/opt/jpeg-turbo/lib/libjpeg.8.dylib" \
+    "$X86_BREW_PREFIX/opt/webp/lib/libwebpdemux.2.dylib" \
+    "$ARM_BREW_PREFIX/opt/webp/lib/libwebpdemux.2.dylib" \
+    "$X86_BREW_PREFIX/opt/webp/lib/libwebp.7.dylib" \
+    "$ARM_BREW_PREFIX/opt/webp/lib/libwebp.7.dylib" \
+    "$X86_BREW_PREFIX/opt/webp/lib/libsharpyuv.0.dylib" \
+    "$ARM_BREW_PREFIX/opt/webp/lib/libsharpyuv.0.dylib" \
+    "$X86_BREW_PREFIX/opt/libtiff/lib/libtiff.6.dylib" \
+    "$ARM_BREW_PREFIX/opt/libtiff/lib/libtiff.6.dylib" \
+    "$X86_BREW_PREFIX/opt/zstd/lib/libzstd.1.dylib" \
+    "$ARM_BREW_PREFIX/opt/zstd/lib/libzstd.1.dylib" \
+    "$X86_BREW_PREFIX/opt/xz/lib/liblzma.5.dylib" \
+    "$ARM_BREW_PREFIX/opt/xz/lib/liblzma.5.dylib"; do
     dependency_name=$(basename "$dependency")
     install_name_tool -change "$dependency" "@rpath/$dependency_name" "$target" 2>/dev/null || true
   done
@@ -71,6 +83,7 @@ copy_universal_binary zopflipng "$X86_BREW_PREFIX/bin/zopflipng" "$ARM_BREW_PREF
 copy_universal_binary oxipng "$X86_BREW_PREFIX/bin/oxipng" "$ARM_BREW_PREFIX/bin/oxipng" "$TOOLS_DIR"
 copy_universal_binary cjpeg "$X86_BREW_PREFIX/opt/mozjpeg/bin/cjpeg" "$ARM_BREW_PREFIX/opt/mozjpeg/bin/cjpeg" "$TOOLS_DIR"
 copy_universal_binary jpegoptim "$X86_BREW_PREFIX/bin/jpegoptim" "$ARM_BREW_PREFIX/bin/jpegoptim" "$TOOLS_DIR"
+copy_universal_binary cwebp "$X86_BREW_PREFIX/bin/cwebp" "$ARM_BREW_PREFIX/bin/cwebp" "$TOOLS_DIR"
 
 copy_universal_library liblcms2.2.dylib "$X86_BREW_PREFIX/opt/little-cms2/lib/liblcms2.2.dylib" "$ARM_BREW_PREFIX/opt/little-cms2/lib/liblcms2.2.dylib"
 copy_universal_library libpng16.16.dylib "$X86_BREW_PREFIX/opt/libpng/lib/libpng16.16.dylib" "$ARM_BREW_PREFIX/opt/libpng/lib/libpng16.16.dylib"
@@ -78,6 +91,12 @@ copy_universal_library libzopflipng.1.dylib "$X86_BREW_PREFIX/opt/zopfli/lib/lib
 copy_universal_library libzopfli.1.dylib "$X86_BREW_PREFIX/opt/zopfli/lib/libzopfli.1.dylib" "$ARM_BREW_PREFIX/opt/zopfli/lib/libzopfli.1.dylib"
 copy_universal_library libjpeg.62.dylib "$X86_BREW_PREFIX/opt/mozjpeg/lib/libjpeg.62.dylib" "$ARM_BREW_PREFIX/opt/mozjpeg/lib/libjpeg.62.dylib"
 copy_universal_library libjpeg.8.dylib "$X86_BREW_PREFIX/opt/jpeg-turbo/lib/libjpeg.8.dylib" "$ARM_BREW_PREFIX/opt/jpeg-turbo/lib/libjpeg.8.dylib"
+copy_universal_library libwebpdemux.2.dylib "$X86_BREW_PREFIX/opt/webp/lib/libwebpdemux.2.dylib" "$ARM_BREW_PREFIX/opt/webp/lib/libwebpdemux.2.dylib"
+copy_universal_library libwebp.7.dylib "$X86_BREW_PREFIX/opt/webp/lib/libwebp.7.dylib" "$ARM_BREW_PREFIX/opt/webp/lib/libwebp.7.dylib"
+copy_universal_library libsharpyuv.0.dylib "$X86_BREW_PREFIX/opt/webp/lib/libsharpyuv.0.dylib" "$ARM_BREW_PREFIX/opt/webp/lib/libsharpyuv.0.dylib"
+copy_universal_library libtiff.6.dylib "$X86_BREW_PREFIX/opt/libtiff/lib/libtiff.6.dylib" "$ARM_BREW_PREFIX/opt/libtiff/lib/libtiff.6.dylib"
+copy_universal_library libzstd.1.dylib "$X86_BREW_PREFIX/opt/zstd/lib/libzstd.1.dylib" "$ARM_BREW_PREFIX/opt/zstd/lib/libzstd.1.dylib"
+copy_universal_library liblzma.5.dylib "$X86_BREW_PREFIX/opt/xz/lib/liblzma.5.dylib" "$ARM_BREW_PREFIX/opt/xz/lib/liblzma.5.dylib"
 
 for target in "$TOOLS_DIR"/* "$FRAMEWORKS_DIR"/*.dylib; do
   rewrite_dependencies "$target"

@@ -10,6 +10,8 @@ Tiny Compressor bundles these open-source command-line tools for image compressi
   Source: https://github.com/mozilla/mozjpeg
 - jpegoptim 1.5.6: GPL-3.0-or-later
   Source: https://github.com/tjko/jpegoptim
+- libwebp 1.6.0: BSD-3-Clause
+  Source: https://chromium.googlesource.com/webm/libwebp
 - Little CMS 2.18: MIT
   Source: https://www.littlecms.com/
 - libpng 1.6.58: libpng-2.0
